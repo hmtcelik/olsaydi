@@ -42,7 +42,7 @@ function App() {
     .catch(function (error) {
       if (error.response) {
         setIsError(true)
-        console.log(error)  
+        console.log(error)
       }
     })
   }
@@ -60,21 +60,23 @@ function App() {
             <PriceField price={price} setPrice={setPrice} label="Price"/>
             <CurrencyField currency={currency} setCurrency={setCurrency} label="Type"/>            
             {isReload && <CircularProgress />}
-            {!isReload && 
-              <BudgetChart 
-                data={data} 
-                setData={setData} 
-                base={currency} 
-                to='TRY' 
-                budget={budget}
-                setBudget={setBudget}
-                price={price}
-                setPrice={setPrice} 
-              />
+            {!isReload && !isError &&
+              <>
+                <BudgetChart 
+                  data={data} 
+                  setData={setData} 
+                  base={currency} 
+                  to='TRY' 
+                  budget={budget}
+                  setBudget={setBudget}
+                  price={price}
+                  setPrice={setPrice} 
+                />
+                <h2>Your Badget: {'\u00A0'}{Math.round(budget * data.value[data.value.length-1]).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</h2>
+                <h3>You Have : {'\u00A0'}{(Math.round(budget*100)/100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} {currency}</h3>
+                <p>You Save: {'\u00A0'}{(Math.round(budget * data.value[data.value.length-1]) - (data.value.length * price)).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</p>
+              </>
             }
-          <h2>Your Badget: {'\u00A0'}{Math.round(budget * data.value[data.value.length-1]).toLocaleString()} TRY(₺)</h2>
-          <h3>You Have : {'\u00A0'}{(Math.round(budget*100)/100).toLocaleString()} {currency}</h3>
-          <p>You Save: {'\u00A0'}{(Math.round(budget * data.value[data.value.length-1]) - (data.value.length * price)).toLocaleString()} TRY(₺)</p>
           </Box>
       </Container>
     </>

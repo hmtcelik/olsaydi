@@ -30,9 +30,6 @@ const BudgetChart :FC<Props> = (props) => {
     dataArr.push(object)
   }
   props.setBudget(budget)
-
-  console.log(budget)
-
   return(
     <>
       <AreaChart
@@ -48,7 +45,7 @@ const BudgetChart :FC<Props> = (props) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis domain={[0, Math.floor(budget)+1]}/>
         <Tooltip />
         <Area type="monotone" dataKey="value" stroke="#1976d2" fill="#1976d2" />
       </AreaChart>
