@@ -5,5 +5,6 @@ export interface ApiResObject{
 
 export interface ChartObject{
   "date": string
-  "value": number
+  "badget": number
+  "value2": number
 }
