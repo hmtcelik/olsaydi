@@ -1,0 +1,15 @@
+$base_color: #1976d2;
+
+body {
+  margin: 0;
+}
+
+.wrapper{
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar:hover{
+  cursor: pointer;
+}
