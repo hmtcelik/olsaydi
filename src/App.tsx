@@ -47,17 +47,14 @@ function App() {
           break
         }
       }
-      console.log(dateList)
       for(var i=0; i<dateList.length-1; i++){
-        sendGetReqOverYear(dateList[i+1], dateList[i], currency, tempData, setTempData, setIsReload, handleError)
+        sendGetReqOverYear(dateList[i+1], dateList[i], currency, i, dateList.length-1, setData, handleError)
       }
       setIsReload(false)
     } else {
       sendGetRequest(startDate, endDate, currency, data, setData, setIsReload, handleError)
     }
   }
-
-  console.log(tempData)
 
   const handleError = (e:any) => {
     setIsError(true)
@@ -67,18 +64,32 @@ function App() {
   React.useEffect(()=>{
     setData({"date":[], "value":[]})
     setIsReload(true)
+    sessionStorage.clear();
     GetValues()
+    if(startDate?.isAfter(endDate)){
+      setIsError(true)
+    }
   },[startDate, endDate, price, currency])
 
+  
+  const fieldMaxWidth = 500
   return (
     <>
       <CssBaseline />
-        <Container maxWidth="lg" className='wrapper'>
+        <Container maxWidth="lg" className='base-wrapper'>
           <Box sx={{ padding:5 }}>
-            <DateField date={startDate} setDate={setStartDate} label="Start Date"/>
-            <DateField date={endDate} setDate={setEndDate} label="End Date"/>
-            <PriceField price={price} setPrice={setPrice} label="Price"/>
-            <CurrencyField currency={currency} setCurrency={setCurrency} label="Type"/>            
+            <div className='dates'>
+              <DateField date={startDate} setDate={setStartDate} label="Start Date"/>
+              <p>{'\u00A0'}{'\u00A0'}<strong>-</strong>{'\u00A0'}{'\u00A0'}</p>
+              <DateField date={endDate} setDate={setEndDate} label="End Date"/>
+            </div>
+            <div className="price-field">
+              <PriceField price={price} setPrice={setPrice} label="Price"/>
+            </div>
+            <div className="currency-field">
+              <CurrencyField currency={currency} setCurrency={setCurrency} label="Type"/>                          
+            </div>
+            <br />
             {isReload && <CircularProgress />}
             {!isReload && !isError &&
               <>
@@ -95,6 +106,11 @@ function App() {
                 <h2>Your Badget: {'\u00A0'}{Math.round(budget * data.value[data.value.length-1]).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</h2>
                 <h3>You Have : {'\u00A0'}{(Math.round(budget*100)/100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} {currency}</h3>
                 <p>You Save: {'\u00A0'}{(Math.round(budget * data.value[data.value.length-1]) - (data.value.length * price)).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</p>
+              </>
+            }
+            {isError && 
+              <>
+                <p className="error-message">Start Date can't be later than End Date </p>
               </>
             }
           </Box>

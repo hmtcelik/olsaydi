@@ -15,18 +15,34 @@ interface Props {
 }
 
 const DateField :FC<Props> = (props) => {
+  const isOutOfRange = (date: Dayjs) => {
+    var bool:boolean = false
+    var now = dayjs(new Date())
+    var past_limit = dayjs('2010-01-01') 
+    if(date.isBefore(past_limit)){
+      return true
+    } else {
+      if(date.isAfter(now)){
+        return true
+      } else {
+        return false
+      }
+    }
+  };
+
   const handleChange = (newValue: Dayjs | null) => {
     props.setDate(newValue)
   };
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack spacing={3} sx={{ maxWidth:500, }}>
-          <MobileDatePicker  
+        <Stack spacing={3}>
+          <MobileDatePicker
             label={props.label}
             inputFormat="DD/MM/YYYY"
             value={dayjs(props.date)}
             onChange={handleChange}
+            shouldDisableDate={isOutOfRange}
             renderInput={(params) => <TextField {...params} />}
             />
         </Stack>
