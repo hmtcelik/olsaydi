@@ -14,6 +14,9 @@ import BudgetChart from './components/BudgetChart';
 
 import { ApiResObject, ChartObject } from './types/Objects';
 
+import { sendGetRequest } from './api/SendGetRequest';
+import { sendGetReqOverYear } from './api/SendGetReqOverYear';
+
 function App() {
   /* states */
   const [startDate, setStartDate] = React.useState<Dayjs | null>(dayjs(new Date(new Date().getFullYear(), 0, 1).toJSON()));
@@ -24,29 +27,46 @@ function App() {
   const [budget, setBudget] = React.useState<number>(0);
   const [isReload, setIsReload] = React.useState<boolean>(true);
   const [isError, setIsError] = React.useState<boolean>(false);
+  
+  // handling over 1 year
+  const [tempData, setTempData] = React.useState<ApiResObject>({"date":[], "value":[]})
+  const dateList:any[] = []
+  var temp_date:any = dayjs(new Date().toJSON())
 
-  const GetValues = () =>{
-    axios
-    .get(`/timeseries/?start_date=${startDate?.add(1, 'days').toJSON().slice(0, 10)}&end_date=${endDate?.toJSON().slice(0, 10)}&base=${currency}&symbols=TRY`)
-    .then((res)=>{
+  const GetValues = async () =>{
+    if ((endDate?.diff(startDate, 'day') ?? true)>=366){
+      dateList.push(endDate)
+      temp_date = endDate
+      while(true){
+        temp_date = temp_date?.subtract(1, 'year')
+        if((temp_date?.diff(startDate, 'day') ?? true)>=366){
+          dateList.push(temp_date)
+        } else {
+          dateList.push(temp_date)
+          dateList.push(startDate)
+          break
+        }
+      }
+      console.log(dateList)
+      for(var i=0; i<dateList.length-1; i++){
+        sendGetReqOverYear(dateList[i+1], dateList[i], currency, tempData, setTempData, setIsReload, handleError)
+      }
       setIsReload(false)
-      if (res.data.success){
-        setData({
-          "date": Object.keys(res.data.rates),
-          "value": Object.values(res.data.rates).map((item:any) => {return item.TRY})
-        })
-      } else {
-        setIsError(true)
-      }
-    })
-    .catch(function (error) {
-      if (error.response) {
-        setIsError(true)
-        console.log(error)
-      }
-    })
+    } else {
+      sendGetRequest(startDate, endDate, currency, data, setData, setIsReload, handleError)
+    }
   }
-  React.useEffect(()=>{ 
+
+  console.log(tempData)
+
+  const handleError = (e:any) => {
+    setIsError(true)
+    console.log(e)
+  }
+
+  React.useEffect(()=>{
+    setData({"date":[], "value":[]})
+    setIsReload(true)
     GetValues()
   },[startDate, endDate, price, currency])
 
