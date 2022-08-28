@@ -23,6 +23,7 @@ const PriceField:FC<Props> = (props) => {
   }
   return (
       <TextField
+      sx={{maxWidth:150}}
       id="outlined-number"
       label={props.label}
       type= {typeof props.price}

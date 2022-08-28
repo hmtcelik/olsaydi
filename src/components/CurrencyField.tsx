@@ -23,7 +23,7 @@ const CurrencyField :FC<Props> = (props) => {
 
   return (
     <>
-      <FormControl fullWidth>
+      <FormControl fullWidth sx={{maxWidth:150}}>
         <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
         <Select
           labelId="demo-simple-select-label"

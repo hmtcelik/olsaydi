@@ -4,12 +4,34 @@ body {
   margin: 0;
 }
 
-.wrapper{
+.base-wrapper{
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
   align-items: center;
-  justify-content: center;
+  text-align: center;
 }
 
-.calendar:hover{
-  cursor: pointer;
+.calendar{
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.error-message{
+  color: rgb(207, 0, 0);
+}
+
+.dates{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.price-field{
+  margin-top: 20px;
+}
+
+.currency-field{
+  margin-top: 20px;
 }
