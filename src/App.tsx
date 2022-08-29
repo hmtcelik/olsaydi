@@ -1,21 +1,27 @@
 import * as React from 'react';
 import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
-import dayjs, { Dayjs } from 'dayjs';
+import Alert from '@mui/material/Alert';
 
 import DateField from './components/DateField';
 import PriceField from './components/PriceField';
 import CurrencyField from './components/CurrencyField';
 import BudgetChart from './components/BudgetChart';
+import Results from './components/Results';
+
+import Footer from './layouts/Footer';
+import Navbar from './layouts/Navbar';
 
 import { ApiResObject, ChartObject } from './types/Objects';
 
 import { sendGetRequest } from './api/SendGetRequest';
 import { sendGetReqOverYear } from './api/SendGetReqOverYear';
+import { margin } from '@mui/system';
 
 function App() {
   /* states */
@@ -27,7 +33,7 @@ function App() {
   const [budget, setBudget] = React.useState<number>(0);
   const [isReload, setIsReload] = React.useState<boolean>(true);
   const [isError, setIsError] = React.useState<boolean>(false);
-  
+
   // handling over 1 year
   const [tempData, setTempData] = React.useState<ApiResObject>({"date":[], "value":[]})
   const dateList:any[] = []
@@ -62,8 +68,8 @@ function App() {
   }
 
   React.useEffect(()=>{
-    setData({"date":[], "value":[]})
     setIsReload(true)
+    setData({"date":[], "value":[]})
     sessionStorage.clear();
     GetValues()
     if(startDate?.isAfter(endDate)){
@@ -71,50 +77,48 @@ function App() {
     }
   },[startDate, endDate, price, currency])
 
-  
-  const fieldMaxWidth = 500
+
   return (
     <>
-      <CssBaseline />
-        <Container maxWidth="lg" className='base-wrapper'>
-          <Box sx={{ padding:5 }}>
-            <div className='dates'>
-              <DateField date={startDate} setDate={setStartDate} label="Start Date"/>
-              <p>{'\u00A0'}{'\u00A0'}<strong>-</strong>{'\u00A0'}{'\u00A0'}</p>
-              <DateField date={endDate} setDate={setEndDate} label="End Date"/>
+      <Navbar/>
+        <CssBaseline />
+          <Container maxWidth="lg" className='base-wrapper'>
+            <div className="fields">
+              <div className='dates'>
+                <DateField date={startDate} setDate={setStartDate} label="Start Date"/>
+                <p>{'\u00A0'}{'\u00A0'}<strong>-</strong>{'\u00A0'}{'\u00A0'}</p>
+                <DateField date={endDate} setDate={setEndDate} label="End Date"/>
+              </div>
+              <div className="price-fields">
+                <PriceField price={price} setPrice={setPrice} label="Price"/>
+                {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
+                <CurrencyField currency={currency} setCurrency={setCurrency} label="Type"/>                          
+              </div>
             </div>
-            <div className="price-field">
-              <PriceField price={price} setPrice={setPrice} label="Price"/>
-            </div>
-            <div className="currency-field">
-              <CurrencyField currency={currency} setCurrency={setCurrency} label="Type"/>                          
-            </div>
-            <br />
-            {isReload && <CircularProgress />}
-            {!isReload && !isError &&
-              <>
-                <BudgetChart 
-                  data={data} 
-                  setData={setData} 
-                  base={currency} 
-                  to='TRY' 
-                  budget={budget}
-                  setBudget={setBudget}
-                  price={price}
-                  setPrice={setPrice} 
-                />
-                <h2>Your Badget: {'\u00A0'}{Math.round(budget * data.value[data.value.length-1]).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</h2>
-                <h3>You Have : {'\u00A0'}{(Math.round(budget*100)/100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} {currency}</h3>
-                <p>You Save: {'\u00A0'}{(Math.round(budget * data.value[data.value.length-1]) - (data.value.length * price)).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} TRY(₺)</p>
-              </>
-            }
-            {isError && 
-              <>
-                <p className="error-message">Start Date can't be later than End Date </p>
-              </>
-            }
-          </Box>
-      </Container>
+              <br />
+              {!isReload && !isError &&
+                <>
+                  <BudgetChart 
+                    data={data} 
+                    setData={setData} 
+                    base={currency} 
+                    to='TRY' 
+                    budget={budget}
+                    setBudget={setBudget}
+                    price={price}
+                    setPrice={setPrice} 
+                  />
+                  <Results data={data} budget={budget} currency={currency} price={price}/>
+                </>
+              }
+              {isError && 
+                <>
+                  <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">Start Date can't be later than End Date</Alert>
+                </>
+              }
+              {isReload && <CircularProgress />}
+        </Container>
+      <Footer />
     </>
   );
 }

@@ -6,5 +6,9 @@ export interface ApiResObject{
 export interface ChartObject{
   "date": string
   "badget": number
-  "value2": number
+  "dolar": number
+}
+
+export interface ChartPayloadObjectArray{
+  [index: number]: { name: string; value: number; unit: number };
 }
