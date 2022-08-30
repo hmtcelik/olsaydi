@@ -15,7 +15,7 @@ export const sendGetReqOverYear =  (
   errorHandler:Function
 ) => {
   axios
-    .get(`/timeseries/?start_date=${start_date?.add(1, 'days').toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
+    .get(`/timeseries/?start_date=${start_date?.toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
     .then((res)=>{
       if (res.data.success){
         sessionStorage.setItem(index.toString(),  JSON.stringify({

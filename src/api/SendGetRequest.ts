@@ -15,13 +15,13 @@ export const sendGetRequest =  (
   errorHandler:Function
 ) => {
   axios
-    .get(`/timeseries/?start_date=${start_date?.add(1, 'days').toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
+    .get(`/timeseries/?start_date=${start_date?.toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
     .then((res)=>{
       setReloadProcessor(false)
       if (res.data.success){
         setData({
           "date": Object.keys(res.data.rates),
-          "value": Object.values(res.data.rates).map((item:any) => {return item.TRY})
+          "value": Object.values(res.data.rates).map((item:any) => {return item.TRY}),
         })
       }
     })

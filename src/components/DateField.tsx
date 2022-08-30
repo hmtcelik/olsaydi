@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Dispatch, SetStateAction, FC} from "react";
 
 import dayjs, { Dayjs } from 'dayjs';
@@ -18,7 +17,7 @@ const DateField :FC<Props> = (props) => {
   const isOutOfRange = (date: Dayjs) => {
     var bool:boolean = false
     var now = dayjs(new Date())
-    var past_limit = dayjs('2010-01-01') 
+    var past_limit = dayjs('2008-01-01') 
     if(date.isBefore(past_limit)){
       return true
     } else {

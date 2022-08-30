@@ -1,10 +1,8 @@
-import * as React from 'react';
 import { Dispatch, SetStateAction, FC, PureComponent} from "react";
 
-import { AreaChart, LineChart, Line , Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {AreaChart, Legend , Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-import { ApiResObject, ChartObject } from '../types/Objects';
-
+import { ApiResObject, ChartObject, ChartPayloadObjectArray } from '../types/Objects';
 
 interface Props {
   data:ApiResObject;
@@ -17,15 +15,42 @@ interface Props {
   setPrice: Dispatch<SetStateAction<number>>;
 }
 
+const CustomTooltip = ({ active, payload, label }:any) => {
+  if (active){
+    return (
+      <div className="custom-tooltip">
+        <p className="date">{`${label}`}</p>
+        <div className="element">
+          <p className="badget">{`Your Money: ${payload[0].value.toLocaleString()}`}</p>
+          <p className="dolar">{`Current Dolar: ${payload[1].value}`}</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+const FormatYThicks = (value:any) =>{
+  if (value.toString().length >= 7){
+    value = Math.round(value / (10 ** 6))
+    value = value.toString() + 'M'
+  } else if (value.toString().length >= 4) {
+    value = Math.round(value / (10 ** 3))
+    value = value.toString() + 'k'  
+  } else {
+    value = value.toString()
+  }
+  return value
+}
 
 const BudgetChart :FC<Props> = (props) => {
-  var dataArr: {date:string, value2:number, badget:number}[] = []
+  var dataArr: {date:string, dolar:number, badget:number}[] = []
   var budget: number = 0
   for (var i=0;i<props.data.date.length;i++){
     budget = budget + (props.price / props.data.value[i])
     var object :ChartObject = {
       "date": props.data.date[i],
-      "value2": Math.round(budget * 100)/100,
+      "dolar": Math.round(props.data.value[i] * 100)/100,
       "badget": Math.round(budget * props.data.value[i])
     }
     dataArr.push(object)
@@ -33,23 +58,36 @@ const BudgetChart :FC<Props> = (props) => {
   props.setBudget(budget)
   return(
     <>
-      <AreaChart
-        width={1000}
-        height={400}
-        data={dataArr}
-        margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0
-        }}
-      >
-        <XAxis dataKey="date" fontSize={12}/>
-        <YAxis fontSize={16} domain={[0, Math.floor(budget *  props.data.value[props.data.value.length-1])+1]}/>
-        <CartesianGrid strokeDasharray="8 8" />
-        <Tooltip isAnimationActive={false} />
-        <Area type="monotone" dataKey="badget" unit=' TRY' stroke="#1976d2" fill="#1976d2" />
-      </AreaChart>
+    <ResponsiveContainer width={"100%"} height={350}>
+        <AreaChart
+          width={1000}
+          height={400}
+          data={dataArr}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0
+          }}
+        >
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+          < stop offset="35%" stopColor="#0069FF" stopOpacity={0.8}/>
+            <stop offset="100%" stopColor="#0069FF" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="date" fontSize={12}/>
+          <YAxis y={10} 
+            fontSize={16} 
+            domain={[0, Math.floor(budget *  props.data.value[props.data.value.length-1])+1]}
+            tickFormatter={FormatYThicks}
+          />
+          <CartesianGrid  vertical={false} strokeDasharray="1" />
+          <Tooltip isAnimationActive={false} active={true} content={<CustomTooltip/>}/>
+          <Area type="monotone" dataKey="badget" animationDuration={750} unit=' TRY' strokeWidth={2} stroke="#0069FF" fill="url(#colorUv)" />
+          <Area type="monotone" dataKey="dolar" animationDuration={750} unit=' TRY' strokeWidth={2} stroke="white" fill="white" />
+        </AreaChart>
+      </ResponsiveContainer>
     </>
   )
 }
