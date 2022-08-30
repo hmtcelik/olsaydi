@@ -28,11 +28,11 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "deploy": "gh-pages -b master -d build",
+    "predeploy": "yarn run build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
