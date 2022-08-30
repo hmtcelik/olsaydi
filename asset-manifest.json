@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/olsaydi/static/css/main.245dc805.css",
+    "main.js": "/olsaydi/static/js/main.89ff1bb0.js",
+    "index.html": "/olsaydi/index.html",
+    "main.245dc805.css.map": "/olsaydi/static/css/main.245dc805.css.map",
+    "main.89ff1bb0.js.map": "/olsaydi/static/js/main.89ff1bb0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.245dc805.css",
+    "static/js/main.89ff1bb0.js"
+  ]
+}
