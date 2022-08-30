@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Dispatch, SetStateAction, FC} from "react";
 
 import dayjs, { Dayjs } from 'dayjs';

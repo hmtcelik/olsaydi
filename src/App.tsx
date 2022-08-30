@@ -1,9 +1,7 @@
 import * as React from 'react';
-import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
@@ -17,11 +15,10 @@ import Results from './components/Results';
 import Footer from './layouts/Footer';
 import Navbar from './layouts/Navbar';
 
-import { ApiResObject, ChartObject } from './types/Objects';
+import { ApiResObject } from './types/Objects';
 
 import { sendGetRequest } from './api/SendGetRequest';
 import { sendGetReqOverYear } from './api/SendGetReqOverYear';
-import { margin } from '@mui/system';
 
 function App() {
   /* states */
@@ -33,6 +30,7 @@ function App() {
   const [budget, setBudget] = React.useState<number>(0);
   const [isReload, setIsReload] = React.useState<boolean>(true);
   const [isError, setIsError] = React.useState<boolean>(false);
+  const [startDateCheck, setStartDateCheck ] = React.useState<boolean>(false);
 
   // handling over 1 year
   const [tempData, setTempData] = React.useState<ApiResObject>({"date":[], "value":[]})
@@ -73,7 +71,7 @@ function App() {
     sessionStorage.clear();
     GetValues()
     if(startDate?.isAfter(endDate)){
-      setIsError(true)
+      setStartDateCheck(true)
     }
   },[startDate, endDate, price, currency])
 
@@ -112,6 +110,11 @@ function App() {
                 </>
               }
               {isError && 
+                <>
+                  <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">An Error Occured, Please Refresh The Page</Alert>
+                </>
+              }
+              {startDateCheck && 
                 <>
                   <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">Start Date can't be later than End Date</Alert>
                 </>

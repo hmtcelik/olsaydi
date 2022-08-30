@@ -1,10 +1,8 @@
-import * as React from 'react';
 import { Dispatch, SetStateAction, FC, PureComponent} from "react";
 
 import {AreaChart, Legend , Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 import { ApiResObject, ChartObject, ChartPayloadObjectArray } from '../types/Objects';
-
 
 interface Props {
   data:ApiResObject;
@@ -30,6 +28,19 @@ const CustomTooltip = ({ active, payload, label }:any) => {
     );
   }
   return null;
+}
+
+const FormatYThicks = (value:any) =>{
+  if (value.toString().length >= 7){
+    value = Math.round(value / (10 ** 6))
+    value = value.toString() + 'M'
+  } else if (value.toString().length >= 4) {
+    value = Math.round(value / (10 ** 3))
+    value = value.toString() + 'k'  
+  } else {
+    value = value.toString()
+  }
+  return value
 }
 
 const BudgetChart :FC<Props> = (props) => {
@@ -66,7 +77,11 @@ const BudgetChart :FC<Props> = (props) => {
             </linearGradient>
           </defs>
           <XAxis dataKey="date" fontSize={12}/>
-          <YAxis y={10} fontSize={16} domain={[0, Math.floor(budget *  props.data.value[props.data.value.length-1])+1]}/>
+          <YAxis y={10} 
+            fontSize={16} 
+            domain={[0, Math.floor(budget *  props.data.value[props.data.value.length-1])+1]}
+            tickFormatter={FormatYThicks}
+          />
           <CartesianGrid  vertical={false} strokeDasharray="1" />
           <Tooltip isAnimationActive={false} active={true} content={<CustomTooltip/>}/>
           <Area type="monotone" dataKey="badget" animationDuration={750} unit=' TRY' strokeWidth={2} stroke="#0069FF" fill="url(#colorUv)" />
