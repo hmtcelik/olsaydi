@@ -1,8 +1,8 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import axios from 'axios';
 
-import { ApiResObject, ChartObject } from '../types/Objects';
+import { ApiResObject } from '../types/Objects';
 
 
 export const sendGetRequest =  (
@@ -15,7 +15,7 @@ export const sendGetRequest =  (
   errorHandler:Function
 ) => {
   axios
-    .get(`/timeseries/?start_date=${start_date?.toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
+    .get(`https://api.exchangerate.host/timeseries/?start_date=${start_date?.toJSON().slice(0, 10)}&end_date=${end_date?.toJSON().slice(0, 10)}&base=${base}&symbols=TRY`)
     .then((res)=>{
       setReloadProcessor(false)
       if (res.data.success){
