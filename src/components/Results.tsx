@@ -2,8 +2,6 @@ import React from 'react';
 
 import { ApiResObject, ChartObject } from '../types/Objects';
 
-import Card from '@mui/material/Card';
-
 interface Props{
   data: ApiResObject
   budget: number

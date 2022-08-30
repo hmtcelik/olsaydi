@@ -33,7 +33,6 @@ function App() {
   const [startDateCheck, setStartDateCheck ] = React.useState<boolean>(false);
 
   // handling over 1 year
-  const [tempData, setTempData] = React.useState<ApiResObject>({"date":[], "value":[]})
   const dateList:any[] = []
   var temp_date:any = dayjs(new Date().toJSON())
 
