@@ -81,10 +81,35 @@ body{
 }
 
 .footer{
-  position: fixed;
-  left: 0;
-  bottom: 0;
+  border-top: 1px solid #f2f2f2;
   width: 100%;
   color: white;
   text-align: center;
+  margin-top: 50px;
+  .items{
+    margin-top: 20px;
+  }
+}
+
+
+.results{
+  margin-top: 40px;
+  p{
+    color: green;
+  }
+}
+
+// mobile
+@media screen and (max-width: 400px) {
+  .results{
+    h2{
+      font-size: 20px;
+    }
+    h3{
+      font-size: 16px;
+    }
+    p{
+      font-size: 15px;
+    }
+  }
 }

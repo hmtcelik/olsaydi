@@ -110,14 +110,10 @@ function App() {
                 </>
               }
               {isError && 
-                <>
-                  <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">An Error Occured, Please Refresh The Page</Alert>
-                </>
+                <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">An Error Occured, Please Refresh The Page</Alert>
               }
               {startDateCheck && 
-                <>
-                  <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">Start Date can't be later than End Date</Alert>
-                </>
+                <Alert sx={{maxWidth:500, margin:"0 auto", marginTop:2 }} severity="error">Start Date can't be later than End Date</Alert>
               }
               {isReload && <CircularProgress />}
         </Container>
